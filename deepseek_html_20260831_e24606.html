@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Улыбка-Стоматология</title>
+  <!-- Шрифты Google -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Библиотека конфетти -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1"></script>
+  <style>
+    /* ----- Общие стили ----- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f8fcff;
+      color: #1f2a3f;
+      line-height: 1.6;
+      scroll-behavior: smooth;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Цветовая палитра */
+    :root {
+      --primary: #2b9eb3;
+      --primary-light: #7ac7d9;
+      --primary-dark: #1a6f81;
+      --accent: #f2b84b;
+      --bg-soft: #f0f9ff;
+      --white: #ffffff;
+      --shadow: 0 8px 30px rgba(43, 158, 179, 0.15);
+      --radius: 20px;
+      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    img {
+      max-width: 100%;
+    }
+
+    /* Кнопки */
+    .btn {
+      display: inline-block;
+      padding: 14px 34px;
+      border: none;
+      border-radius: 60px;
+      font-weight: 600;
+      font-size: 1rem;
+      background: var(--primary);
+      color: white;
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: 0 4px 14px rgba(43, 158, 179, 0.35);
+      letter-spacing: 0.3px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(43, 158, 179, 0.45);
+      background: var(--primary-dark);
+    }
+
+    .btn:active {
+      transform: scale(0.96);
+    }
+
+    .btn-accent {
+      background: var(--accent);
+      box-shadow: 0 4px 14px rgba(242, 184, 75, 0.4);
+      color: #1f2a3f;
+    }
+
+    .btn-accent:hover {
+      background: #e0a53a;
+      box-shadow: 0 8px 25px rgba(242, 184, 75, 0.5);
+    }
+
+    .btn-white {
+      background: white;
+      color: var(--primary);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+    }
+
+    .btn-white:hover {
+      background: #f0f9ff;
+      transform: translateY(-3px);
+    }
+
+    /* ----- Шапка ----- */
+    .header {
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid rgba(43, 158, 179, 0.08);
+      padding: 12px 0;
+    }
+
+    .header .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      font-size: 1.5rem;
+      color: var(--primary-dark);
+    }
+
+    .logo span {
+      background: var(--primary);
+      color: white;
+      padding: 4px 10px;
+      border-radius: 40px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .logo svg {
+      width: 32px;
+      height: 32px;
+      fill: var(--primary);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: #1f2a3f;
+      font-weight: 500;
+      transition: var(--transition);
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0%;
+      height: 2px;
+      background: var(--primary);
+      transition: var(--transition);
+    }
+
+    .nav-links a:hover {
+      color: var(--primary);
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .nav-links .btn {
+      padding: 8px 22px;
+      font-size: 0.9rem;
+    }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 5px;
+    }
+
+    .hamburger span {
+      width: 28px;
+      height: 3px;
+      background: var(--primary-dark);
+      border-radius: 4px;
+      transition: var(--transition);
+    }
+
+    /* ----- Hero ----- */
+    .hero {
+      padding: 80px 0 70px;
+      background: linear-gradient(135deg, #e6f7fd 0%, #d4eef7 100%);
+      border-radius: 0 0 60px 60px;
+      margin-bottom: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero .container {
+      display: flex;
+      align-items: center;
+      gap: 50px;
+      flex-wrap: wrap;
+    }
+
+    .hero-content {
+      flex: 1 1 400px;
+    }
+
+    .hero-content h1 {
+      font-size: 3.2rem;
+      font-weight: 800;
+      line-height: 1.2;
+      color: #0f2b3a;
+    }
+
+    .hero-content h1 span {
+      color: var(--primary);
+      position: relative;
+    }
+
+    .hero-content h1 span::after {
+      content: '';
+      position: absolute;
+      bottom: 6px;
+      left: 0;
+      width: 100%;
+      height: 12px;
+      background: rgba(43, 158, 179, 0.2);
+      border-radius: 8px;
+      z-index: -1;
+    }
+
+    .hero-content p {
+      font-size: 1.2rem;
+      color: #2c4b5a;
+      margin: 20px 0 30px;
+      max-width: 500px;
+    }
+
+    .hero-image {
+      flex: 1 1 300px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .hero-image svg {
+      max-width: 100%;
+      height: auto;
+      filter: drop-shadow(0 12px 30px rgba(43,158,179,0.2));
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.7);
+      backdrop-filter: blur(6px);
+      padding: 6px 18px;
+      border-radius: 40px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--primary-dark);
+      margin-bottom: 15px;
+      border: 1px solid rgba(255,255,255,0.9);
+    }
+
+    /* ----- Секция услуг ----- */
+    .services {
+      padding: 70px 0;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 15px;
+      color: #0f2b3a;
+    }
+
+    .section-subtitle {
+      text-align: center;
+      color: #4a6a7a;
+      max-width: 600px;
+      margin: 0 auto 50px;
+      font-size: 1.1rem;
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+    }
+
+    .service-card {
+      background: var(--white);
+      padding: 32px 24px;
+      border-radius: var(--radius);
+      text-align: center;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+      border: 1px solid rgba(43, 158, 179, 0.05);
+      cursor: default;
+    }
+
+    .service-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 16px 40px rgba(43, 158, 179, 0.12);
+      border-color: var(--primary-light);
+    }
+
+    .service-card .icon {
+      font-size: 3rem;
+      margin-bottom: 16px;
+      display: inline-block;
+      background: var(--bg-soft);
+      padding: 18px;
+      border-radius: 60px;
+      line-height: 1;
+    }
+
+    .service-card h3 {
+      font-size: 1.3rem;
+      margin-bottom: 10px;
+      color: #0f2b3a;
+    }
+
+    .service-card p {
+      color: #4a6a7a;
+      font-size: 0.95rem;
+    }
+
+    /* ----- Отзывы ----- */
+    .testimonials {
+      padding: 70px 0;
+      background: var(--bg-soft);
+    }
+
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+    }
+
+    .testimonial-card {
+      background: var(--white);
+      padding: 28px 24px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+      border-left: 5px solid var(--primary-light);
+    }
+
+    .testimonial-card:hover {
+      transform: scale(1.02);
+    }
+
+    .testimonial-card .stars {
+      color: var(--accent);
+      font-size: 1.2rem;
+      letter-spacing: 2px;
+    }
+
+    .testimonial-card p {
+      font-size: 1rem;
+      margin: 12px 0 16px;
+      color: #1f2a3f;
+      font-style: italic;
+    }
+
+    .testimonial-card .author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .testimonial-card .author .avatar {
+      width: 44px;
+      height: 44px;
+      background: var(--primary-light);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 1.2rem;
+    }
+
+    .testimonial-card .author .name {
+      font-weight: 600;
+      color: #0f2b3a;
+    }
+
+    .testimonial-card .author .title {
+      font-size: 0.85rem;
+      color: #4a6a7a;
+    }
+
+    /* ----- Запись (форма) ----- */
+    .booking {
+      padding: 70px 0 90px;
+    }
+
+    .booking-wrapper {
+      display: flex;
+      gap: 50px;
+      flex-wrap: wrap;
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 40px 45px;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(43, 158, 179, 0.06);
+    }
+
+    .booking-info {
+      flex: 1 1 300px;
+    }
+
+    .booking-info h2 {
+      font-size: 2rem;
+      margin-bottom: 15px;
+      color: #0f2b3a;
+    }
+
+    .booking-info p {
+      color: #4a6a7a;
+      margin-bottom: 20px;
+    }
+
+    .booking-info .highlight {
+      background: var(--bg-soft);
+      padding: 16px 20px;
+      border-radius: 12px;
+      border-left: 4px solid var(--primary);
+    }
+
+    .booking-form {
+      flex: 2 1 400px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #1f2a3f;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 12px 18px;
+      border: 2px solid #e2edf2;
+      border-radius: 14px;
+      font-family: inherit;
+      font-size: 1rem;
+      transition: var(--transition);
+      background: #fafdff;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(43, 158, 179, 0.1);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .booking-form .btn {
+      width: 100%;
+      padding: 16px;
+      font-size: 1.1rem;
+    }
+
+    /* ----- Модалка (успех) ----- */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      backdrop-filter: blur(4px);
+      z-index: 200;
+      justify-content: center;
+      align-items: center;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: white;
+      max-width: 440px;
+      width: 90%;
+      padding: 40px 30px 35px;
+      border-radius: 30px;
+      text-align: center;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.2);
+      animation: modalPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+    }
+
+    .modal-content .check {
+      font-size: 4rem;
+      background: #d4edda;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      color: #28a745;
+      animation: pulseCheck 1s ease infinite alternate;
+    }
+
+    .modal-content h2 {
+      font-size: 1.8rem;
+      margin-bottom: 10px;
+      color: #0f2b3a;
+    }
+
+    .modal-content p {
+      color: #4a6a7a;
+      margin-bottom: 20px;
+    }
+
+    .modal-content .btn {
+      padding: 12px 40px;
+      background: var(--primary);
+    }
+
+    .modal-content .btn:hover {
+      background: var(--primary-dark);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes modalPop {
+      0% { transform: scale(0.7); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes pulseCheck {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.05); }
+    }
+
+    /* ----- Футер ----- */
+    .footer {
+      background: #0f2b3a;
+      color: rgba(255,255,255,0.7);
+      padding: 30px 0;
+      text-align: center;
+      border-radius: 40px 40px 0 0;
+      margin-top: 20px;
+    }
+
+    .footer a {
+      color: var(--primary-light);
+    }
+
+    /* ----- Адаптивность ----- */
+    @media (max-width: 768px) {
+      .header .container {
+        flex-wrap: wrap;
+      }
+
+      .nav-links {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        gap: 16px;
+        padding: 20px 0 10px;
+        border-top: 1px solid rgba(43,158,179,0.1);
+        margin-top: 12px;
+      }
+
+      .nav-links.open {
+        display: flex;
+      }
+
+      .hamburger {
+        display: flex;
+      }
+
+      .hero-content h1 {
+        font-size: 2.4rem;
+      }
+
+      .hero {
+        padding: 50px 0;
+      }
+
+      .hero .container {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .hero-content p {
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .booking-wrapper {
+        padding: 24px 20px;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .section-title {
+        font-size: 2rem;
+      }
+
+      .services-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .services-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== ШАПКА ===== -->
+  <header class="header">
+    <div class="container">
+      <div class="logo">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+        Улыбка <span>Dental</span>
+      </div>
+      <nav class="nav-links" id="navLinks">
+        <a href="#services">Услуги</a>
+        <a href="#testimonials">Отзывы</a>
+        <a href="#booking">Запись</a>
+        <a href="#booking" class="btn btn-accent">Записаться</a>
+      </nav>
+      <button class="hamburger" id="hamburger" aria-label="Меню">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ===== ГЕРОЙ ===== -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-badge">✨ Забота о вашей улыбке</div>
+        <h1>Стоматология, где <span>улыбка</span> становится искусством</h1>
+        <p>Современные технологии, безболезненное лечение и индивидуальный подход — подарите себе здоровую и красивую улыбку.</p>
+        <a href="#booking" class="btn btn-accent">Записаться на приём</a>
+      </div>
+      <div class="hero-image">
+        <svg width="300" height="300" viewBox="0 0 300 300" fill="none">
+          <circle cx="150" cy="150" r="120" fill="rgba(43,158,179,0.08)" />
+          <circle cx="150" cy="150" r="90" fill="rgba(43,158,179,0.05)" />
+          <path d="M150 90C128 90 110 108 110 130C110 152 128 170 150 170C172 170 190 152 190 130C190 108 172 90 150 90Z" fill="white" stroke="#2b9eb3" stroke-width="6"/>
+          <path d="M120 140L135 155L165 125" stroke="#2b9eb3" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect x="70" y="170" width="160" height="30" rx="15" fill="#2b9eb3" opacity="0.15"/>
+          <rect x="80" y="185" width="140" height="20" rx="10" fill="#2b9eb3" opacity="0.1"/>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== УСЛУГИ ===== -->
+  <section class="services" id="services">
+    <div class="container">
+      <h2 class="section-title">Наши услуги</h2>
+      <p class="section-subtitle">Всё для вашей улыбки — от диагностики до эстетической реставрации</p>
+      <div class="services-grid">
+        <div class="service-card">
+          <div class="icon">🦷</div>
+          <h3>Лечение зубов</h3>
+          <p>Безболезненное лечение кариеса, пульпита и периодонтита с применением современных материалов.</p>
+        </div>
+        <div class="service-card">
+          <div class="icon">✨</div>
+          <h3>Отбеливание</h3>
+          <p>Эффективное и безопасное отбеливание зубов, возвращающее естественную белизну.</p>
+        </div>
+        <div class="service-card">
+          <div class="icon">🦷</div>
+          <h3>Имплантация</h3>
+          <p>Установка имплантов ведущих мировых брендов с гарантией на 10 лет.</p>
+        </div>
+        <div class="service-card">
+          <div class="icon">😁</div>
+          <h3>Ортодонтия</h3>
+          <p>Исправление прикуса с помощью брекетов и элайнеров — для взрослых и детей.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ОТЗЫВЫ ===== -->
+  <section class="testimonials" id="testimonials">
+    <div class="container">
+      <h2 class="section-title">Отзывы пациентов</h2>
+      <p class="section-subtitle">Реальные истории людей, которые доверили нам свою улыбку</p>
+      <div class="testimonials-grid">
+        <div class="testimonial-card">
+          <div class="stars">★★★★★</div>
+          <p>«Огромное спасибо всему коллективу! Лечение прошло абсолютно безболезненно, а результат превзошёл все ожидания. Теперь улыбаюсь без стеснения!»</p>
+          <div class="author">
+            <div class="avatar">А</div>
+            <div>
+              <div class="name">Анна К.</div>
+              <div class="title">Пациент</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="stars">★★★★★</div>
+          <p>«Отличная клиника! Современное оборудование, приветливый персонал. Особенно понравился подход к детям — мой сын теперь не боится стоматологов.»</p>
+          <div class="author">
+            <div class="avatar">М</div>
+            <div>
+              <div class="name">Михаил С.</div>
+              <div class="title">Пациент</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="stars">★★★★★</div>
+          <p>«Делал имплантацию — всё прошло быстро и профессионально. Через месяц уже забыл, что это был имплант, а не свой зуб. Спасибо!»</p>
+          <div class="author">
+            <div class="avatar">Е</div>
+            <div>
+              <div class="name">Елена В.</div>
+              <div class="title">Пациент</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ЗАПИСЬ ===== -->
+  <section class="booking" id="booking">
+    <div class="container">
+      <div class="booking-wrapper">
+        <div class="booking-info">
+          <h2>Запишитесь на приём</h2>
+          <p>Оставьте заявку, и мы свяжемся с вами для подтверждения удобного времени.</p>
+          <div class="highlight">
+            <strong>📞 +7 (999) 123-45-67</strong><br>
+            <span style="font-size:0.95rem;">Работаем ежедневно с 9:00 до 21:00</span>
+          </div>
+          <div style="margin-top:20px; background: #eaf6fa; padding: 12px 18px; border-radius: 12px; font-size:0.9rem;">
+            ⏱ Предварительная запись обязательна. Берегите своё время!
+          </div>
+        </div>
+        <form class="booking-form" id="bookingForm" action="https://formsubmit.co/kolya777qq@gmail.com" method="POST">
+          <!-- Скрытые поля для formsubmit -->
+          <input type="hidden" name="_captcha" value="false">
+          <input type="hidden" name="_subject" value="Новая запись на приём">
+          <input type="hidden" name="_template" value="table">
+          <input type="hidden" name="_next" value="https://your-site.com/thanks.html"> <!-- можно заменить на страницу спасибо, но у нас модалка -->
+
+          <div class="form-group">
+            <label for="name">Ваше имя *</label>
+            <input type="text" id="name" name="Имя" placeholder="Иван Иванов" required>
+          </div>
+          <div class="form-group">
+            <label for="phone">Телефон *</label>
+            <input type="tel" id="phone" name="Телефон" placeholder="+7 (999) 123-45-67" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="date">Желаемая дата</label>
+              <input type="date" id="date" name="Дата">
+            </div>
+            <div class="form-group">
+              <label for="time">Желаемое время</label>
+              <input type="time" id="time" name="Время">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="comment">Комментарий (опционально)</label>
+            <textarea id="comment" name="Комментарий" placeholder="Дополнительные пожелания..."></textarea>
+          </div>
+          <button type="submit" class="btn btn-accent" id="submitBtn">✨ Записаться сейчас</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== МОДАЛКА УСПЕХА ===== -->
+  <div class="modal-overlay" id="successModal">
+    <div class="modal-content">
+      <div class="check">✔</div>
+      <h2>Вы записаны!</h2>
+      <p>Скоро мы свяжемся с вами для подтверждения времени. <br>Проверьте вашу почту — туда пришло подтверждение.</p>
+      <button class="btn" id="closeModalBtn">Отлично, спасибо!</button>
+    </div>
+  </div>
+
+  <!-- ===== ФУТЕР ===== -->
+  <footer class="footer">
+    <div class="container">
+      <p>© 2026 Улыбка Dental. Все права защищены.</p>
+      <p style="margin-top:6px; font-size:0.9rem;">
+        Сделано с ❤️ для вашей улыбки
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    (function() {
+      'use strict';
+
+      // --- Мобильное меню ---
+      const hamburger = document.getElementById('hamburger');
+      const navLinks = document.getElementById('navLinks');
+      hamburger.addEventListener('click', () => {
+        navLinks.classList.toggle('open');
+      });
+
+      // Закрываем меню при клике на ссылку
+      document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', () => {
+          navLinks.classList.remove('open');
+        });
+      });
+
+      // --- Форма ---
+      const form = document.getElementById('bookingForm');
+      const modal = document.getElementById('successModal');
+      const closeModalBtn = document.getElementById('closeModalBtn');
+      const submitBtn = document.getElementById('submitBtn');
+
+      // Функция показа модалки с конфетти
+      function showSuccessModal() {
+        modal.classList.add('active');
+        // Запуск конфетти
+        if (typeof confetti === 'function') {
+          confetti({
+            particleCount: 120,
+            spread: 70,
+            origin: { y: 0.6 },
+            colors: ['#2b9eb3', '#f2b84b', '#ff6b6b', '#4ecdc4', '#ffe66d']
+          });
+          setTimeout(() => {
+            confetti({
+              particleCount: 80,
+              spread: 50,
+              origin: { y: 0.5 },
+              colors: ['#7ac7d9', '#f9ca24', '#f0932b', '#6ab04c']
+            });
+          }, 200);
+        }
+        // Прокрутка вверх
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      // Закрыть модалку
+      function closeModal() {
+        modal.classList.remove('active');
+      }
+
+      closeModalBtn.addEventListener('click', closeModal);
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+      });
+
+      // Обработка отправки формы
+      form.addEventListener('submit', function(e) {
+        // Предотвращаем стандартную отправку, чтобы обработать анимацию
+        e.preventDefault();
+
+        // Простая валидация
+        const name = document.getElementById('name').value.trim();
+        const phone = document.getElementById('phone').value.trim();
+        if (!name || !phone) {
+          alert('Пожалуйста, заполните имя и телефон.');
+          return;
+        }
+
+        // Показываем индикацию загрузки
+        submitBtn.textContent = '⏳ Отправка...';
+        submitBtn.disabled = true;
+
+        // Отправляем форму через Fetch (чтобы получить ответ и показать модалку)
+        const formData = new FormData(form);
+
+        fetch(form.action, {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'Accept': 'application/json'
+          }
+        })
+        .then(response => {
+          if (response.ok) {
+            // Успешно
+            showSuccessModal();
+            form.reset(); // очищаем форму
+          } else {
+            // Ошибка сервера
+            alert('Произошла ошибка при отправке. Попробуйте позже.');
+          }
+        })
+        .catch(error => {
+          alert('Ошибка сети. Проверьте подключение.');
+          console.error(error);
+        })
+        .finally(() => {
+          submitBtn.textContent = '✨ Записаться сейчас';
+          submitBtn.disabled = false;
+        });
+      });
+
+      // Дополнительно: при клике на кнопку "Записаться" в навигации — плавный скролл
+      document.querySelectorAll('a[href="#booking"]').forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          document.getElementById('booking').scrollIntoView({ behavior: 'smooth' });
+        });
+      });
+
+    })();
+  </script>
+
+</body>
+</html>
